@@ -3,7 +3,7 @@
 
 name: NavSimple
 script: NavSimple.js
-description: Scrolling Navigation for single-page sites.
+description: A MooTools class for handling navigation on long, single-page sites.
 
 requires:
   - Core/Class.Extras
@@ -29,7 +29,9 @@ var NavSimple = new Class({
   Implements: [Options, Events], 
   
   options: {
+    active: true,
     scrollElement: window,
+    sections: 'header,section,footer',
     initialSection: 0,
     keyboardNav: true,
     keyboardNavEsc: true,
@@ -56,11 +58,11 @@ var NavSimple = new Class({
     }
   },
   
-  initialize: function(sections, options){
+  initialize: function(options){
     this.setOptions(options);
     
     this.element = document.id(this.options.scrollElement);
-    this.sections = $$(sections);
+    this.sections = $$(this.options.sections);
     this.sectionLinks = $$(this.options.sectionLinks);    
     
     this.window_scroll = new Fx.Scroll(this.element, {
@@ -68,15 +70,27 @@ var NavSimple = new Class({
     });
     
     this.currentSection = this.options.initialSection;
-    if (this.options.doInitialScroll)
+    if (this.options.active && this.options.doInitialScroll)
       this.toSection(this.currentSection);
     
-    this.attach();
+    if (this.options.active)
+      this.activate();
    
     if (this.options.hashPathOnLoad)
       this.detectHashPath();
 
     return this;
+  },
+  
+  activate: function(){
+    if (!this.active){
+      this.active = true;
+      this.attach();
+    }
+  },
+  deactivate: function(){
+    this.active = false;
+    this.detach();
   },
 
   attach: function(){
