@@ -36,8 +36,6 @@ var NavSimple = new Class({
     keyboardNavSpace: true,
     keyboardNavNumbers: true,
     doInitialScroll: false,
-    hashPathOnLoad: false,
-    hashPathRegex: /^#[\w-]+$/,
     markReadDelay: 5000,
     activeSectionLinkClass: 'active',
     activeSectionClass: 'active',
@@ -45,15 +43,24 @@ var NavSimple = new Class({
     offset: {
       x : 0,
       y : -100
+    },
+    hashPathOnLoad: false,
+    hashPathRegex: /^#[\w-]+$/,
+    findSectionIndexFromHash: function(hash, ns){
+      for (var i = 0; i < ns.sections.length; i++){
+        if (hash.replace('#','') == ns.sections[i].get('id'))
+          return i;
+      }
+      return 0;
     }
   },
   
-  initialize: function(sectionLinks, sections, options){
+  initialize: function(sections, options){
     this.setOptions(options);
     
     this.element = document.id(this.options.scrollElement);
-    this.sectionLinks = $$(sectionLinks);
     this.sections = $$(sections);
+    this.sectionLinks = $$(this.options.sectionLinks);    
     
     this.window_scroll = new Fx.Scroll(this.element, {
       offset : this.options.offset
@@ -70,7 +77,7 @@ var NavSimple = new Class({
 
     return this;
   },
-// todo make section links optional
+
   attach: function(){
     var thiz = this;
     
@@ -120,7 +127,6 @@ var NavSimple = new Class({
   eventArgs: function(){
     return [
       this.sections[this.currentSection],
-      this.sectionLinks[this.currentSection],
       this.currentSection,
       this
     ];
@@ -128,11 +134,11 @@ var NavSimple = new Class({
   
   nextSection: function(){
     this.toSection((this.currentSection + 1).limit(0, this.sections.length-1), null, true);
-    this.fireEvent('nextSection', [this.currentSection, this]);
+    this.fireEvent('nextSection', this.eventArgs());
   },
   previousSection: function(){
     this.toSection((this.currentSection - 1).limit(0, this.sections.length-1), null, true);
-    this.fireEvent('previousSection', [this.currentSection, this]);
+    this.fireEvent('previousSection', this.eventArgs());
   },
   toSection: function(section, callback){
     if (section !== section.limit(0, this.sections.length - 1))
@@ -172,12 +178,7 @@ var NavSimple = new Class({
   },
   
   toSectionFromFromHash: function(hash){
-    for (var i = 0; i < this.sectionLinks.length; i++){
-      if (new RegExp('/?' + hash).test(this.sectionLinks[i].get('href'))){
-        this.toSection(i);
-        break;
-      }        
-    }
+    this.toSection( this.options.findSectionIndexFromHash(hash, this) );
   },
   
   detectHashPath: function(){
