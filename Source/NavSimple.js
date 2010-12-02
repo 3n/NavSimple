@@ -40,6 +40,7 @@ var NavSimple = new Class({
     activeSectionLinkClass: 'active',
     activeSectionClass: 'active',
     readClass: 'done',
+    foldRatio: 0.6,
     offset: {
       x : 0,
       y : -100
@@ -88,8 +89,9 @@ var NavSimple = new Class({
     this.sectionLinks.addEvent('click', this.sectionLinkClick);
     
     this.scrollEvent = function(){
-      for (var i = 0; i < this.sections.length; i++){
-        if (this.sections[i].getTop() > this.element.getScrollTop()) // todo improve
+      for (var i = this.sections.length; i--;) {
+        if (this.sections[i].getTop() < (this.element.getScrollTop() + (this.element.getHeight() * this.options.foldRatio))
+            && (i === 0 || this.sections[i-1].getTop() <= this.element.getScrollTop()))
           break;
       }
       this.makeActive(i);
