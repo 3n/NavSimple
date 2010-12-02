@@ -6,7 +6,7 @@ section elements and (optionally) the navigation links that go along with them.
 NavSimple will let the user scroll to the appropriate section in a variety of ways 
 including clicking your links and keyboard commands. Whether the user simple scrolls
 or uses the navigation elements, the current section is always known and can be
-visualized by you. NavSimple will even fire and event when it thinks the user has
+visualized by you. NavSimple will even fire an event when it thinks the user has
 "read" a given section.
 
 ![Screenshot](http://idisk.me.com/iancollins/Public/Pictures/Skitch/BankSimple_%7C_Home-20101201-232519.png)
