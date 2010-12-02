@@ -81,18 +81,20 @@ var NavSimple = new Class({
   attach: function(){
     var thiz = this;
     
-    this.sectionLinks.addEvent('click', function(e){
+    this.sectionLinkClick = function(e){
       e.preventDefault();
       thiz.toSection(thiz.sectionLinks.indexOf(this));
-    });
+    };
+    this.sectionLinks.addEvent('click', this.sectionLinkClick);
     
-    this.element.addEvent('scroll', function(){
+    this.scrollEvent = function(){
       for (var i = 0; i < this.sections.length; i++){
-        if (this.sections[i].getTop() > this.element.getScrollTop())
+        if (this.sections[i].getTop() > this.element.getScrollTop()) // todo improve
           break;
       }
       this.makeActive(i);
-    }.bind(this));
+    }.bind(this);
+    this.element.addEvent('scroll', this.scrollEvent);
     
     if (this.options.keyboardNav){
       this.keyboard = new Keyboard({
@@ -121,7 +123,9 @@ var NavSimple = new Class({
     }
   },
   detach: function(){
-    // todo
+    this.sectionLinks.removeEvent('click', this.sectionLinkClick);
+    this.element.removeEvent('scroll', this.scrollEvent);
+    this.keyboard.deactivate();
   },
   
   eventArgs: function(){
