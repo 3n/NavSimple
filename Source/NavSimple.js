@@ -173,8 +173,10 @@ var NavSimple = new Class({
   
   toSectionFromFromHash: function(hash){
     for (var i = 0; i < this.sectionLinks.length; i++){
-      if (this.sectionLinks[i].get('href') == hash)
+      if (new RegExp('/?' + hash).test(this.sectionLinks[i].get('href'))){
         this.toSection(i);
+        break;
+      }        
     }
   },
   
