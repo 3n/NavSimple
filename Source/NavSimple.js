@@ -31,6 +31,10 @@ var NavSimple = new Class({
   options: {
     scrollElement: window,
     initialSection: 0,
+    keyboardNav: true,
+    keyboardNavEsc: true,
+    keyboardNavSpace: true,
+    keyboardNavNumbers: true,
     doInitialScroll: false,
     hashPathOnLoad: false,
     hashPathRegex: /^#[\w-]+$/,
@@ -66,7 +70,7 @@ var NavSimple = new Class({
 
     return this;
   },
-
+// todo make section links optional
   attach: function(){
     var thiz = this;
     
@@ -83,7 +87,31 @@ var NavSimple = new Class({
       this.makeActive(i);
     }.bind(this));
     
-    // todo keyboard
+    if (this.options.keyboardNav){
+      this.keyboard = new Keyboard({
+        active: true,
+        events : {
+          'j': this.nextSection.bind(this),
+          'k': this.previousSection.bind(this)
+        }
+      });
+      
+      if (this.options.keyboardNavSpace){
+        this.keyboard.addEvents({
+          'space'       : function(e) { e.preventDefault(); this.nextSection(); }.bind(this),
+          'shift+space' : function(e) { e.preventDefault(); this.previousSection(); }.bind(this)   
+        });
+      }
+      
+      if (this.options.keyboardNavEsc)
+        this.keyboard.addEvent('esc', this.toSection.pass(0, this));
+      
+      if (this.options.keyboardNavNumbers){
+        this.sections.length.times(function(i){
+          this.keyboard.addEvent(i.toString(), this.toSection.pass(i, this));
+        }, this);
+      }
+    }
   },
   detach: function(){
     // todo
