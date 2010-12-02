@@ -65,6 +65,13 @@ var NavSimple = new Class({
   },
 
   attach: function(){
+    var thiz = this;
+    
+    this.sectionLinks.addEvent('click', function(e){
+      e.preventDefault();
+      thiz.toSection(thiz.sectionLinks.indexOf(this));
+    });
+    
     this.element.addEvent('scroll', function(){
       for (var i = 0; i < this.sections.length; i++){
         if (this.sections[i].getTop() > this.element.getScrollTop())
