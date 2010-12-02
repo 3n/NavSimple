@@ -34,13 +34,12 @@ By default, the following keyboard shortcuts are activated:
 Each of these can be turned off/on using options.
 
 
-Class Documentation
-===================
+NavSimple Method: constructor
+-----------------------------
 
 	new NavSimple([options]);
 
-Options
--------
+#### Options
 
 * active: (boolean: defaults to true) active or not on instantiation,
 * scrollElement: (element: defaults to window) element to scroll.
@@ -63,8 +62,7 @@ Options
   outputs the appropriate section for that hash string. By default it picks the section 
   with a matching id. Arguments: hash string and NavSimple instance.
 
-Events
-------
+#### Events
 
 All events are passed: the current section element, the current section index and 
 the NavSimple instance.
@@ -76,56 +74,51 @@ the NavSimple instance.
 * sectionRead: section was read (remained active section for specified duration).
 
 
-Method: activate
-===================
+NavSimple Method: activate
+--------------------------
 
 Activates the NavSimple instance.
 
-Syntax
-------
+#### Syntax
 
 	ns.activate();
 	
 
-Method: deactivate
-===================
+NavSimple Method: deactivate
+----------------------------
 
 Deactivates the NavSimple instance.
 
-Syntax
-------
+#### Syntax
 
 	ns.deactivate();
 	
 
-Method: nextSection
-===================
+NavSimple Method: nextSection
+-----------------------------
 
 Navigates to next section.
 
-Syntax
-------
+#### Syntax
 
 	ns.nextSection();
 
 
-Method: previousSection
-=======================
+NavSimple Method: previousSection
+---------------------------------
 
 Navigates to previous section.
 
-Syntax
-------
+#### Syntax
 
 	ns.previousSection();
 
 
-Method: toSection
-=================
+NavSimple Method: toSection
+---------------------------
 
 Navigates to section at specified index. Fires optional callback on scroll completion.
 
-Syntax
-------
+#### Syntax
 
 	ns.toSection(index[, callback]);
