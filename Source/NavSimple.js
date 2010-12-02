@@ -10,6 +10,9 @@ requires:
   - Core/Element.Event
   - Core/Element.Dimensions
   - More/Fx.Scroll
+  - More/Keyboard
+  - More/Fx.Scroll
+  - More/Events.Pseudos  
 
 provides: [NavSimple]
 
@@ -86,6 +89,15 @@ var NavSimple = new Class({
     // todo
   },
   
+  eventArgs: function(){
+    return [
+      this.sections[this.currentSection],
+      this.sectionLinks[this.currentSection],
+      this.currentSection,
+      this
+    ];
+  },
+  
   nextSection: function(){
     this.toSection((this.currentSection + 1).limit(0, this.sections.length-1), null, true);
     this.fireEvent('nextSection', [this.currentSection, this]);
@@ -99,9 +111,12 @@ var NavSimple = new Class({
       return;
     
     this.currentSection = section;
-    
-    if (callback)
-      this.window_scroll.addEvent('complete:once', callback);
+
+    this.window_scroll.addEvent('complete:once', function(){
+      this.fireEvent('scrollComplete', this.eventArgs());
+      if (callback)
+        callback();
+    }.bind(this));      
       
     this.window_scroll.toElement(this.sections[section]);
   },
@@ -116,44 +131,21 @@ var NavSimple = new Class({
     this.sections.removeClass(this.options.activeSectionClass);
     
     if (this.sectionLinks[this.currentSection]) {
-      // this.activeSectionLink = this.sectionLinks[this.currentSection];
       this.sectionLinks[this.currentSection].addClass(this.options.activeSectionLinkClass);
       this.sections[this.currentSection].addClass(this.options.activeSectionClass);
-      this.fireEvent('sectionActive', [
-        this.sections[this.currentSection],
-        this.sectionLinks[this.currentSection],
-        this.currentSection,
-        this
-      ]);
-      // move nav arrow notch under the active section's button
-      // var arrow_left = this.activeSectionLink.getPosition(this.nav_wrapper).x + (this.activeSectionLink.getWidth() / 2 - 11);
-      // this.nav_arrow.setStyle('left', arrow_left);
+      this.fireEvent('sectionActive', this.eventArgs());
     }
   },
   markRead: function(section){
     if (this.sectionLinks[section]){
-      this.sectionLinks[section].addClass(this.options.readClass);
-     
-      this.fireEvent('sectionRead', [
-        this.sections[this.currentSection],
-        this.sectionLinks[this.currentSection],
-        this.currentSection,
-        this
-      ]);
-      
-      // this.mt.handleEvent({ 
-      //   name:  'Section Read',
-      //   info: {
-      //     description: this.sectionLinks[section].get('text').replace('\n',''),
-      //     category: 'Section Read'
-      //   }
-      // });
+      this.sectionLinks[section].addClass(this.options.readClass);     
+      this.fireEvent('sectionRead', this.eventArgs());
     }
   },
   
   toSectionFromFromHash: function(hash){
     for (var i = 0; i < this.sectionLinks.length; i++){
-      if (this.sectionLinks[i].get('href') == hash.replace(/^\//, ''))
+      if (this.sectionLinks[i].get('href') == hash)
         this.toSection(i);
     }
   },
