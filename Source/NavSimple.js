@@ -141,7 +141,7 @@ var NavSimple = new Class({
   detach: function(){
     this.sectionLinks.removeEvent('click', this.sectionLinkClick);
     this.element.removeEvent('scroll', this.scrollEvent);
-    this.keyboard.deactivate();
+    if (this.keyboard) this.keyboard.deactivate();
   },
   
   eventArgs: function(){
