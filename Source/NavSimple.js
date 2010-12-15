@@ -205,7 +205,7 @@ var NavSimple = new Class({
   detectHashPath: function(){
     var sectionHash = document.location.hash;
     if (sectionHash.test(this.options.hashPathRegex)){
-      document.location.hash = "";
+      document.location.hash = "#";
       this.toSectionFromFromHash.delay(this.options.hashLoadDelay, this, sectionHash);
     }
   }
