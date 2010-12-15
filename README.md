@@ -58,6 +58,7 @@ NavSimple Method: constructor
 * offset: (object: defaults to { x : 0, y : -100 }) offsets for scrolling.
 * hashPathOnLoad: (boolean: defaults to false) looks at browser hash and scrolls to appropriate section.
 * hashPathRegex: (regexp: defaults to /^#[\w-]+$/) test for url hash you want to scroll on.
+* hashLoadDelay: (number: defaults to 100) how long to wait after domready to do hash scrolling.
 * findSectionIndexFromHash: (function) a function that takes a hash string and 
   outputs the appropriate section for that hash string. By default it picks the section 
   with a matching id. Arguments: hash string and NavSimple instance.

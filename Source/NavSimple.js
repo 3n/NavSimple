@@ -49,6 +49,7 @@ var NavSimple = new Class({
     },
     hashPathOnLoad: false,
     hashPathRegex: /^#[\w-]+$/,
+    hashLoadDelay: 100,
     findSectionIndexFromHash: function(hash, ns){
       for (var i = 0; i < ns.sections.length; i++){
         if (hash.replace('#','') == ns.sections[i].get('id'))
@@ -205,7 +206,7 @@ var NavSimple = new Class({
     var sectionHash = document.location.hash;
     if (sectionHash.test(this.options.hashPathRegex)){
       document.location.hash = "";
-      this.toSectionFromFromHash.delay(100, this, sectionHash);
+      this.toSectionFromFromHash.delay(this.options.hashLoadDelay, this, sectionHash);
     }
   }
   
