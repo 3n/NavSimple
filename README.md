@@ -51,6 +51,7 @@ NavSimple Method: constructor
 * keyboardNavSpace: (boolean: defaults to true) use space and shift+space to navigate sections.
 * keyboardNavNumbers: (boolean: defaults to true) use number keys to go to sections 0-9.
 * markReadDelay: (number: defaults to 5000) how long to wait before marking a section as read.
+* scrollThrottle: (number: defaults to 100) delay to put between consecutive scroll events.
 * activeSectionLinkClass: (string: defaults to 'active') class to apply to active section link.
 * activeSectionClass: (string: defaults to 'active') class to apply to active section.
 * readClass: (string: defaults to 'done') class to apply to read section.
