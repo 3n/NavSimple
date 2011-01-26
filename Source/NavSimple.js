@@ -8,7 +8,7 @@ description: A MooTools class for handling navigation on long, single-page sites
 requires:
   - Core/Class.Extras
   - Core/Element.Event
-  - Core/Element.Dimensions
+  - Core/Element.Dimensions  
   - More/Fx.Scroll
   - More/Keyboard
   - More/Fx.Scroll
@@ -39,6 +39,7 @@ var NavSimple = new Class({
     keyboardNavNumbers: true,
     doInitialScroll: false,
     markReadDelay: 5000,
+    scrollThrottle: 100,
     activeSectionLinkClass: 'active',
     activeSectionClass: 'active',
     readClass: 'done',
@@ -70,6 +71,8 @@ var NavSimple = new Class({
       offset : this.options.offset
     });
     
+    this.setHeights();
+    
     this.currentSection = this.options.initialSection;
     if (this.options.active && this.options.doInitialScroll)
       this.toSection(this.currentSection);
@@ -81,6 +84,11 @@ var NavSimple = new Class({
       this.detectHashPath();
 
     return this;
+  },
+
+  setHeights: function(){
+    this.sectionTops = this.sections.map(function(section){ return section.getTop(); });
+    this.elementHeight = this.element.getHeight();
   },
   
   activate: function(){
@@ -103,14 +111,16 @@ var NavSimple = new Class({
     };
     this.sectionLinks.addEvent('click', this.sectionLinkClick);
     
+    
     this.scrollEvent = function(){
+      var elementScroll = this.element.getScrollTop();
       for (var i = this.sections.length; i--;) {
-        if (this.sections[i].getTop() < (this.element.getScrollTop() + (this.element.getHeight() * this.options.foldRatio))
-            && (i === 0 || this.sections[i-1].getTop() <= this.element.getScrollTop()))
+        if (this.sectionTops[i] < (elementScroll + (this.elementHeight * this.options.foldRatio))
+            && (i === 0 || this.sectionTops[i-1] <= elementScroll))
           break;
       }
       this.makeActive(i);
-    }.bind(this);
+    }.bind(this).throttle(this.options.scrollThrottle);
     this.element.addEvent('scroll', this.scrollEvent);
     
     if (this.options.keyboardNav){
@@ -211,3 +221,20 @@ var NavSimple = new Class({
   }
   
 });
+
+if (!Function.throttle){
+  Function.implement({
+    throttle: function(waitTime){
+      var self = this,
+  			args = (arguments.length > 1) ? Array.slice(arguments, 1) : null;
+
+      self.throttleLastCall = new Date().getTime() - waitTime;
+      return function(){
+        if (new Date().getTime() - self.throttleLastCall > waitTime){
+          self.throttleLastCall = new Date().getTime();
+          self();
+        }
+      };
+    }
+  });
+}
